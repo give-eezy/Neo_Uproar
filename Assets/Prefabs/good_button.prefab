@@ -124,7 +124,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: -148546716480148777}
         m_TargetAssemblyTypeName: ButtonScript, Assembly-CSharp
-        m_MethodName: Onclick
+        m_MethodName: rightOnclick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
