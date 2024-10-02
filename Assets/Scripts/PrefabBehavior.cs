@@ -5,15 +5,18 @@ using UnityEngine;
 public class PrefabBehavior : MonoBehaviour
 {
 
-    Animator myAnim;
+    
 
 
     public bool isMove;
 
     public string showWord;
 
-    private string[] sickWord = {"아픔", "진짜아픔", "어금니", "앞니", "신경치료", "충치"};
-    private string[] normalWord = {"구경꾼", "아픈척", "아무생각 없음", "뭐쓰지", "일단 테스트", "여섯개째"};
+    private string[] sickWord = 
+        {"이가 썩은 것 같아요....", "이가 아파요. 진료 받고 싶어요", "엉엉... 이가 아프니까 자꾸 눈물이 나요", "아야야... 이가 너무 찌릿찌릿해요.", "이가 빠졌어요! 얼른 봐주세요!"};
+    
+    private string[] normalWord = 
+        { "볼이 빵빵하니까 귀여워진 것 같아요! 럭키네오잖앙??", "헉, 볼이 부어올랐어요... 다들 저한테 귀여운 말 해줘요!", "...", "아야... 배가 아파요. 화장실이 어디죠?", "입이 쩍 벌어지네 이젠 분위기가 아닌 나의 입 안을 파악~♪"};
 
     public string fakeWord = "페이크다 이 xx들아";
 
@@ -25,7 +28,7 @@ public class PrefabBehavior : MonoBehaviour
 
     void Awake()
     {
-        // Director 에서는 isProperty 값에 따라 행동해야 한다
+        // Director 에서는 isSick 값에 따라 행동해야 한다
         // 만약 아프면 왼쪽으로 보내고, 안아프면 오른쪽으로 보내야 한다
 
         // 태그 별로 나눠서, 아픈지 아프지 않은지를 isSick 으로 나누기
@@ -40,7 +43,7 @@ public class PrefabBehavior : MonoBehaviour
         else if(gameObject.CompareTag("good"))
         {
             this.isSick = false;
-            this.showWord = normalWord[Random.Range(0, normalWord.Length)];
+            this.showWord = normalWord[Random.Range(0, normalWord.Length)]; // 아프지 않은 문구 랜덤 부여
         }
         
 
@@ -49,7 +52,7 @@ public class PrefabBehavior : MonoBehaviour
         // 그렇게 하려면... 일단은 생각을 해보자
         // 아니지 이것도 그냥 태그로 따로 정리를 해버릴까?
 
-        if(gameObject.name == "fake_prefab(Clone)")
+        if(gameObject.name == "s_prefab(Clone)")
         {
             this.showWord = ".....";
         }
@@ -58,11 +61,7 @@ public class PrefabBehavior : MonoBehaviour
 
         Debug.Log(gameObject.name);
 
-        if(gameObject.name == "fake_prefab(Clone)")
-        {
-            myAnim = GetComponent<Animator>();
-            Debug.Log("s2프리팹입니다. 애니메이터 불러옴");
-        }
+        
 
     }
 

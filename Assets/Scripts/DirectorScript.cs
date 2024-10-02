@@ -66,7 +66,7 @@ public class DirectorScript : MonoBehaviour
     {
         
 
-            if (currentPrefab != null)
+            if (currentPrefab != null) // 프리팹이 삭제되기 전 문구 나타내기 기능. 프리팹이 없다면(최초 생성 시)는 작동하지 않는다.
             {
                 if (currentPrefab.CompareTag("Fake"))
                 {
@@ -85,10 +85,8 @@ public class DirectorScript : MonoBehaviour
 
 
 
-            if (currentPrefab != null)
+            if (currentPrefab != null) // 페이드아웃 하면서 삭제되도록 하는 부분. 아래쪽의 Destroy가 삭제기능, 이 if문 안쪽은 페이드아웃 기능
             {
-
-                
 
                 Renderer renderer = currentPrefab.GetComponent<Renderer>(); // 프리팹의 renderer 컴포넌트를 불러옴
                 if (renderer != null)
@@ -114,7 +112,7 @@ public class DirectorScript : MonoBehaviour
             cdText.text = "";
 
 
-            if(!this.stopCo)
+            if(!this.stopCo) // 조건을 만족했을 경우, 코루틴 작동하되 프리팹 생성은 되지 않도록
             {
                  yield return new WaitForSeconds(0.8f);
 
