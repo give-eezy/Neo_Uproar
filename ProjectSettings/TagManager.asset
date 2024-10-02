@@ -4,9 +4,10 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - sonic
-  - kirby
   - prefabs
+  - Fake
+  - sick
+  - good
   layers:
   - Default
   - TransparentFX

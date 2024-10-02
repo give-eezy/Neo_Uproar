@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: -4220905111916579271}
   m_Layer: 0
   m_Name: k_prefab
-  m_TagString: prefabs
+  m_TagString: good
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -99,4 +99,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   checkDir: 
   showWord: 
-  isProperty: 0
+  fakeWord: "\uD398\uC774\uD06C\uB2E4 \uC774 xx\uB4E4\uC544"
+  isSick: 0

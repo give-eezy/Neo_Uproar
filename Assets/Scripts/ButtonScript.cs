@@ -26,14 +26,15 @@ public class ButtonScript : MonoBehaviour
 
     public void leftOnclick()
     {
-        Director.checkingLogic("left");
+       
+        Director.buttonListener(true);
     }
 
     public void rightOnclick()
     {
 
-        Director.checkingLogic("right");
-
+        
+        Director.buttonListener(false);
     }
 
 }
