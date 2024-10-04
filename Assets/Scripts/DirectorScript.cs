@@ -245,6 +245,8 @@ public class DirectorScript : MonoBehaviour
     {
         Debug.Log("버튼이 눌렸고, 받은 값은 " + sickChecker + " 입니다");
 
+        cdText.text = "";
+
         currentPrefab.GetComponent<PrefabBehavior>().isMove = true;
 
         foreach (Transform child in Buttons)

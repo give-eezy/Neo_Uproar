@@ -91,7 +91,7 @@ public class PrefabBehavior : MonoBehaviour
     {
         yield return new WaitForSeconds(1f);
 
-        transform.Translate(speed * Time.deltaTime, 0, 0);
+        transform.Translate(-speed * Time.deltaTime, 0, 0);
 
     }
 
