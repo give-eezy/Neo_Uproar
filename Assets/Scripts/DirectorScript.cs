@@ -11,27 +11,21 @@ public class DirectorScript : MonoBehaviour
     private GameObject currentPrefab; // 현재 생성된 캐릭터 프리팹
 
     HeartManager heart;
-    AudioSource mainBGM;
 
 
     public GameObject LButton;
     public GameObject RButton;
-
-    GameObject howTo;
 
     Transform Buttons;
 
 
     Text cdText; // 문구를 나타내기 위함
     Text scText; // 점수판
-
-
-    private Coroutine typeCoroutine; // 타이핑쪽 코루틴 객체를 다루기 위한... 뭐시기
     
 
     float outDuration = 1f; // 페이드아웃 시간
     float inDuration = 0.5f;
-    float typingSpeed = 0.05f;
+    float typingSpeed = 0.07f;
 
     public bool stopCo = false;
 
@@ -49,18 +43,10 @@ public class DirectorScript : MonoBehaviour
 
         cdText = GameObject.Find("cdText").GetComponent<Text>();
         scText = GameObject.Find("Scoreboard").GetComponent<Text>();
-
-        howTo = GameObject.Find("howTo");
-
-        mainBGM = GetComponent<AudioSource>();
-
+      
+            
         
-
-        popHowTo();    
-        
-        StartCoroutine(RemoveAndSpawnPrefab()); 
-        // 처음에 코루틴을 시작. RemoveAndSpawnPrefab()은 생성된 프리팹을 삭제 후 재생성 해주는 코루틴 이지만, 현재 생성된 프리팹이 없다면 삭제를 건너뛰고 생성만을 담당.
-        // 현재 상태는 스크립트가 실행되기 시작하는 상태이므로 프리팹이 존재하지 않아서 생성만을 담당한다.
+        StartCoroutine(RemoveAndSpawnPrefab()); // 처음에 코루틴을 시작. 처음에 프리팹이 생성되도록 하는 기능을 겸한다
      
         
    
@@ -71,14 +57,7 @@ public class DirectorScript : MonoBehaviour
     {
         scText.text = "현재 점수 : " + this.score;
         
-        if(Input.GetKeyDown(KeyCode.Space)) 
-        {
-            Time.timeScale = 0;
-        }
-        if(Input.GetKeyDown(KeyCode.Return))
-        {
-            Time.timeScale = 1;
-        }
+
     }
 
 
@@ -89,30 +68,18 @@ public class DirectorScript : MonoBehaviour
 
             if (currentPrefab != null) // 프리팹이 삭제되기 전 문구 나타내기 기능. 프리팹이 없다면(최초 생성 시)는 작동하지 않는다.
             {
-
-
-                if (typeCoroutine != null) // 텍스트 타이핑이 다 되기 전에 버튼을 누르면, 그 전의 값이 여전히 입력중이다. 그것을 방지하기 위한 코드
+                if (currentPrefab.CompareTag("Fake"))
                 {
-                    StopCoroutine(this.typeCoroutine); // 객체에 저장되었던 코루틴을 멈춤
-                    this.typeCoroutine = null;
+                    StartCoroutine(TypeDialogue(currentPrefab.GetComponent<PrefabBehavior>().fakeWord));
                 }
-            //if (currentPrefab.CompareTag("Fake"))
-            //    {
-            //        StartCoroutine(TypeDialogue(currentPrefab.GetComponent<PrefabBehavior>().fakeWord));
-            //    }
-            //    else
-            //    {
-            //        if(typeCoroutine != null) // 텍스트 타이핑이 다 되기 전에 버튼을 누르면, 그 전의 값이 여전히 입력중이다. 그것을 방지하기 위한 코드
-            //        {
-            //            StopCoroutine(this.typeCoroutine); // 객체에 저장되었던 코루틴을 멈춤
-            //            this.typeCoroutine = null;
-            //        }
-            //        StartCoroutine(TypeDialogue(currentPrefab.GetComponent<PrefabBehavior>().showWord));
-            //    }
+                else
+                {
+                    StartCoroutine(TypeDialogue(currentPrefab.GetComponent<PrefabBehavior>().showWord));
+                }
             }
 
 
-            yield return new WaitForSeconds(1.2f); // 다음 동작 전 1초 대기
+            yield return new WaitForSeconds(1f); // 다음 동작 전 1초 대기
 
 
 
@@ -152,7 +119,6 @@ public class DirectorScript : MonoBehaviour
                  // 랜덤 인덱스 생성
                 int randomIndex = Random.Range(0, prefabs.Length);
                 currentPrefab = Instantiate(prefabs[randomIndex]); // 랜덤한 프리팹을 생성
-                // 프리팹의 위치 좌표를 설정하려면 여기서 건드리면 될 듯
 
 
                 // 프리팹이 생성될 때 페이드인 하면서 만들어지도록
@@ -179,16 +145,11 @@ public class DirectorScript : MonoBehaviour
 
 
 
-            this.typeCoroutine = StartCoroutine(TypeDialogue(currentPrefab.GetComponent<PrefabBehavior>().showWord)); // 글자가 타이핑되듯이
+            StartCoroutine(TypeDialogue(currentPrefab.GetComponent<PrefabBehavior>().showWord)); // 글자가 타이핑되듯이
 
 
-
-            // 버튼 생성부
-            // 버튼의 좌표를 여기서 결정해주면 될 듯 하다.
-            // LButton 은 아픔, RButton은 멀쩡함
-
-            GameObject lb = Instantiate(LButton, Buttons); // Lbutton을 생성하고, Buttons의 자식 오브젝트로 생성
-            GameObject rb = Instantiate(RButton, Buttons); // Rbutton을 생성하고, Buttons의 자식 오브젝트로 생성
+            GameObject lb = Instantiate(LButton, Buttons);
+            GameObject rb = Instantiate(RButton, Buttons);
 
 
 
@@ -269,14 +230,6 @@ public class DirectorScript : MonoBehaviour
         
 
     }
-
-    private void popHowTo()
-    {
-        howTo.SetActive(true);
-        Time.timeScale = 0;
-    }
-
-
     
 
 }
