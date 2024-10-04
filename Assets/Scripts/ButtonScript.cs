@@ -8,6 +8,7 @@ public class ButtonScript : MonoBehaviour
     Transform Buttons;
     DirectorScript Director;
 
+    AudioSource mainBGM;
     
 
     // Start is called before the first frame update
@@ -16,6 +17,7 @@ public class ButtonScript : MonoBehaviour
         
         Buttons = GameObject.Find("Buttons").GetComponent<Transform>();
         Director = GameObject.Find("GameDirector").GetComponent<DirectorScript>();
+        mainBGM = Director.GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -43,16 +45,13 @@ public class ButtonScript : MonoBehaviour
         Director.buttonListener(false);
     }
 
-    public void testClick()
-    {
-        Debug.Log("´­¸®Áö·Õ");
-    }
 
     public void closeHowTo()
     {
         GameObject howTo = GameObject.Find("howTo");
         howTo.SetActive(false);
         Time.timeScale = 1;
+        mainBGM.Play();
     }
 
 }

@@ -11,6 +11,7 @@ public class DirectorScript : MonoBehaviour
     private GameObject currentPrefab; // 현재 생성된 캐릭터 프리팹
 
     HeartManager heart;
+    AudioSource mainBGM;
 
 
     public GameObject LButton;
@@ -50,6 +51,10 @@ public class DirectorScript : MonoBehaviour
         scText = GameObject.Find("Scoreboard").GetComponent<Text>();
 
         howTo = GameObject.Find("howTo");
+
+        mainBGM = GetComponent<AudioSource>();
+
+        
 
         popHowTo();    
         

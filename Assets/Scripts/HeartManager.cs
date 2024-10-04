@@ -19,6 +19,9 @@ public class HeartManager : MonoBehaviour
 
     GameObject director;
 
+
+    AudioSource mainBGM;
+
     
 
     // Start is called before the first frame update
@@ -29,6 +32,8 @@ public class HeartManager : MonoBehaviour
         popUp = GameObject.Find("popUp");
         overPanel = GameObject.Find("overPanel");
         overText = GameObject.Find("overText");
+
+        mainBGM = director.GetComponent<AudioSource>();
 
         popUp.SetActive(false);
         overPanel.SetActive(false);
@@ -80,6 +85,7 @@ public class HeartManager : MonoBehaviour
     {
 
         director.GetComponent<DirectorScript>().stopCo = true;
+        mainBGM.Stop();
 
         popUp.SetActive(true);
 
