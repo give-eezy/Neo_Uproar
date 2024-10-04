@@ -18,7 +18,7 @@ public class PrefabBehavior : MonoBehaviour
     private string[] normalWord = 
         { "볼이 빵빵하니까 귀여워진 것 같아요! 럭키네오잖앙??", "헉, 볼이 부어올랐어요... 다들 저한테 귀여운 말 해줘요!", "...", "아야... 배가 아파요. 화장실이 어디죠?", "입이 쩍 벌어지네 이젠 분위기가 아닌 나의 입 안을 파악~♪"};
 
-    public string fakeWord = "페이크다 이 xx들아";
+    
 
     public bool isSick;
 

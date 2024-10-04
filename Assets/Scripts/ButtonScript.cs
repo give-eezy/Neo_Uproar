@@ -8,6 +8,7 @@ public class ButtonScript : MonoBehaviour
     Transform Buttons;
     DirectorScript Director;
 
+    AudioSource mainBGM;
     
 
     // Start is called before the first frame update
@@ -16,6 +17,7 @@ public class ButtonScript : MonoBehaviour
         
         Buttons = GameObject.Find("Buttons").GetComponent<Transform>();
         Director = GameObject.Find("GameDirector").GetComponent<DirectorScript>();
+        mainBGM = Director.GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -26,15 +28,30 @@ public class ButtonScript : MonoBehaviour
 
     public void leftOnclick()
     {
-       
+        if (Time.timeScale == 0)
+        {
+            return; // 일시 정지 상태일 때 클릭 무시
+        }
         Director.buttonListener(true);
     }
 
     public void rightOnclick()
     {
+        if (Time.timeScale == 0)
+        {
+            return; // 일시 정지 상태일 때 클릭 무시
+        }
 
-        
         Director.buttonListener(false);
+    }
+
+
+    public void closeHowTo()
+    {
+        GameObject howTo = GameObject.Find("howTo");
+        howTo.SetActive(false);
+        Time.timeScale = 1;
+        mainBGM.Play();
     }
 
 }

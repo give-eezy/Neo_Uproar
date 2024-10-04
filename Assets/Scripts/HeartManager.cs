@@ -13,11 +13,14 @@ public class HeartManager : MonoBehaviour
 
     float fadeTime = 2f;
 
-
+    GameObject popUp;
     GameObject overPanel;
     GameObject overText;
 
     GameObject director;
+
+
+    AudioSource mainBGM;
 
     
 
@@ -26,10 +29,13 @@ public class HeartManager : MonoBehaviour
     {
         director = GameObject.Find("GameDirector");
 
+        popUp = GameObject.Find("popUp");
         overPanel = GameObject.Find("overPanel");
         overText = GameObject.Find("overText");
-        
 
+        mainBGM = director.GetComponent<AudioSource>();
+
+        popUp.SetActive(false);
         overPanel.SetActive(false);
         overText.SetActive(false);
 
@@ -79,6 +85,9 @@ public class HeartManager : MonoBehaviour
     {
 
         director.GetComponent<DirectorScript>().stopCo = true;
+        mainBGM.Stop();
+
+        popUp.SetActive(true);
 
         StartCoroutine(FadeIn(overPanel.GetComponent<Image>()));
         StartCoroutine(FadeIn(overText.GetComponent<Text>()));
