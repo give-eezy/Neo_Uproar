@@ -1,15 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
-
+using UnityEngine.SceneManagement;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ButtonScript : MonoBehaviour
 {
     Transform Buttons;
     DirectorScript Director;
+    GameObject p_panel;
+
+    Button p_button;
 
     AudioSource mainBGM;
-    
+
+
+    private void Awake()
+    {
+        p_panel = GameObject.Find("pausePanel");
+    }
+
 
     // Start is called before the first frame update
     void Start()
@@ -18,6 +28,7 @@ public class ButtonScript : MonoBehaviour
         Buttons = GameObject.Find("Buttons").GetComponent<Transform>();
         Director = GameObject.Find("GameDirector").GetComponent<DirectorScript>();
         mainBGM = Director.GetComponent<AudioSource>();
+        p_button = GameObject.Find("pauseButton").GetComponent<Button>();
     }
 
     // Update is called once per frame
@@ -50,8 +61,33 @@ public class ButtonScript : MonoBehaviour
     {
         GameObject howTo = GameObject.Find("howTo");
         howTo.SetActive(false);
+        p_button.interactable = true;
         Time.timeScale = 1;
         mainBGM.Play();
     }
 
+    public void restart()
+    {
+        SceneManager.LoadScene("GameScene");
+    }
+
+    public void gameQuit()
+    {
+        Application.Quit();
+    }
+
+    public void pauseFunc()
+    {
+        
+        Time.timeScale = 0;
+        Debug.Log(p_panel);
+        p_panel.SetActive(true);
+    }
+
+    public void resumeFunc()
+    {
+        
+        Time.timeScale = 1;
+        p_panel.SetActive(false);
+    }
 }

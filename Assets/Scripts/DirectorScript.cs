@@ -4,10 +4,12 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 public class DirectorScript : MonoBehaviour
 {
     public GameObject[] prefabs; // 캐릭터 프리팹 배열
     public GameObject[] signs; // 맞고 틀림을 판단하는 프리팹 배열
+    public GameObject stampPrefab;
     private GameObject currentPrefab; // 현재 생성된 캐릭터 프리팹
 
     HeartManager heart;
@@ -18,6 +20,9 @@ public class DirectorScript : MonoBehaviour
     public GameObject RButton;
 
     GameObject howTo;
+    GameObject s_bubble;
+    GameObject p_panel;
+    Button p_button;
 
     Transform Buttons;
 
@@ -37,6 +42,7 @@ public class DirectorScript : MonoBehaviour
 
 
     int score = 0; // 점수
+    int c_point = 2; // 클리어 기준 점수
     
     
 
@@ -51,11 +57,15 @@ public class DirectorScript : MonoBehaviour
         scText = GameObject.Find("Scoreboard").GetComponent<Text>();
 
         howTo = GameObject.Find("howTo");
+        s_bubble = GameObject.Find("s_bubble");
+        p_panel = GameObject.Find("pausePanel");
+        p_button = GameObject.Find("pauseButton").GetComponent<Button>();
+
 
         mainBGM = GetComponent<AudioSource>();
 
-        
-
+        p_panel.SetActive(false);
+        s_bubble.SetActive(false);
         popHowTo();    
         
         StartCoroutine(RemoveAndSpawnPrefab()); 
@@ -71,22 +81,21 @@ public class DirectorScript : MonoBehaviour
     {
         scText.text = "현재 점수 : " + this.score;
         
-        if(Input.GetKeyDown(KeyCode.Space)) 
-        {
-            Time.timeScale = 0;
-        }
-        if(Input.GetKeyDown(KeyCode.Return))
-        {
-            Time.timeScale = 1;
-        }
+   
     }
 
 
     // 여기부터 코루틴
     private IEnumerator RemoveAndSpawnPrefab() // 프리팹의 생성과 삭제를 담당하는 코루틴
     {
-        
-
+        s_bubble.SetActive(false);
+            
+        if(this.score >= c_point)
+        {
+            StartCoroutine(ClearCo());
+        } 
+        else
+        {
             if (currentPrefab != null) // 프리팹이 삭제되기 전 문구 나타내기 기능. 프리팹이 없다면(최초 생성 시)는 작동하지 않는다.
             {
 
@@ -96,19 +105,19 @@ public class DirectorScript : MonoBehaviour
                     StopCoroutine(this.typeCoroutine); // 객체에 저장되었던 코루틴을 멈춤
                     this.typeCoroutine = null;
                 }
-            //if (currentPrefab.CompareTag("Fake"))
-            //    {
-            //        StartCoroutine(TypeDialogue(currentPrefab.GetComponent<PrefabBehavior>().fakeWord));
-            //    }
-            //    else
-            //    {
-            //        if(typeCoroutine != null) // 텍스트 타이핑이 다 되기 전에 버튼을 누르면, 그 전의 값이 여전히 입력중이다. 그것을 방지하기 위한 코드
-            //        {
-            //            StopCoroutine(this.typeCoroutine); // 객체에 저장되었던 코루틴을 멈춤
-            //            this.typeCoroutine = null;
-            //        }
-            //        StartCoroutine(TypeDialogue(currentPrefab.GetComponent<PrefabBehavior>().showWord));
-            //    }
+                //if (currentPrefab.CompareTag("Fake"))
+                //    {
+                //        StartCoroutine(TypeDialogue(currentPrefab.GetComponent<PrefabBehavior>().fakeWord));
+                //    }
+                //    else
+                //    {
+                //        if(typeCoroutine != null) // 텍스트 타이핑이 다 되기 전에 버튼을 누르면, 그 전의 값이 여전히 입력중이다. 그것을 방지하기 위한 코드
+                //        {
+                //            StopCoroutine(this.typeCoroutine); // 객체에 저장되었던 코루틴을 멈춤
+                //            this.typeCoroutine = null;
+                //        }
+                //        StartCoroutine(TypeDialogue(currentPrefab.GetComponent<PrefabBehavior>().showWord));
+                //    }
             }
 
 
@@ -145,14 +154,14 @@ public class DirectorScript : MonoBehaviour
             cdText.text = "";
 
 
-            if(!this.stopCo) // 조건을 만족했을 경우, 코루틴 작동하되 프리팹 생성은 되지 않도록
+            if (!this.stopCo) // 조건을 만족했을 경우, 코루틴 작동하되 프리팹 생성은 되지 않도록
             {
-                 yield return new WaitForSeconds(0.8f);
+                yield return new WaitForSeconds(0.8f);
 
-                 // 랜덤 인덱스 생성
+                // 랜덤 인덱스 생성
                 int randomIndex = Random.Range(0, prefabs.Length);
                 currentPrefab = Instantiate(prefabs[randomIndex]); // 랜덤한 프리팹을 생성
-                // 프리팹의 위치 좌표를 설정하려면 여기서 건드리면 될 듯
+                                                                   // 프리팹의 위치 좌표를 설정하려면 여기서 건드리면 될 듯
 
 
                 // 프리팹이 생성될 때 페이드인 하면서 만들어지도록
@@ -178,22 +187,24 @@ public class DirectorScript : MonoBehaviour
                 }
 
 
+                s_bubble.SetActive(true);
+                this.typeCoroutine = StartCoroutine(TypeDialogue(currentPrefab.GetComponent<PrefabBehavior>().showWord)); // 글자가 타이핑되듯이
 
-            this.typeCoroutine = StartCoroutine(TypeDialogue(currentPrefab.GetComponent<PrefabBehavior>().showWord)); // 글자가 타이핑되듯이
 
 
+                // 버튼 생성부
+                // 버튼의 좌표를 여기서 결정해주면 될 듯 하다.
+                // LButton 은 아픔, RButton은 멀쩡함
 
-            // 버튼 생성부
-            // 버튼의 좌표를 여기서 결정해주면 될 듯 하다.
-            // LButton 은 아픔, RButton은 멀쩡함
-
-            GameObject lb = Instantiate(LButton, Buttons); // Lbutton을 생성하고, Buttons의 자식 오브젝트로 생성
-            GameObject rb = Instantiate(RButton, Buttons); // Rbutton을 생성하고, Buttons의 자식 오브젝트로 생성
+                GameObject lb = Instantiate(LButton, Buttons); // Lbutton을 생성하고, Buttons의 자식 오브젝트로 생성
+                GameObject rb = Instantiate(RButton, Buttons); // Rbutton을 생성하고, Buttons의 자식 오브젝트로 생성
 
 
 
 
             }
+        }
+        
 
      
     }
@@ -237,6 +248,56 @@ public class DirectorScript : MonoBehaviour
         }
     }
 
+    // 게임을 클리어 했을 때 실행할 코루틴. 프리팹의 생성과 삭제를 담당하던 코루틴의 실행을 중단하고, 
+    private IEnumerator ClearCo() 
+    {
+        Debug.Log("Clear 코루틴 시작");
+        StopCoroutine(RemoveAndSpawnPrefab());
+        if (currentPrefab != null) // 프리팹이 삭제되기 전 문구 나타내기 기능. 프리팹이 없다면(최초 생성 시)는 작동하지 않는다.
+        {
+
+
+            if (typeCoroutine != null) // 텍스트 타이핑이 다 되기 전에 버튼을 누르면, 그 전의 값이 여전히 입력중이다. 그것을 방지하기 위한 코드
+            {
+                StopCoroutine(this.typeCoroutine); // 객체에 저장되었던 코루틴을 멈춤
+                this.typeCoroutine = null;
+            }
+        }
+
+            yield return new WaitForSeconds(1.2f);
+
+        if (currentPrefab != null) // 페이드아웃 하면서 삭제되도록 하는 부분. 아래쪽의 Destroy가 삭제기능, 이 if문 안쪽은 페이드아웃 기능
+        {
+
+            Renderer renderer = currentPrefab.GetComponent<Renderer>(); // 프리팹의 renderer 컴포넌트를 불러옴
+            if (renderer != null)
+            {
+                Color color = renderer.material.color;
+                float elapsedTime = 0f;
+
+                while (elapsedTime < outDuration)
+                {
+                    // 서서히 투명해짐
+                    color.a = Mathf.Lerp(1, 0, elapsedTime / outDuration);
+                    renderer.material.color = color;
+
+                    elapsedTime += Time.deltaTime;
+                    yield return null; // 다음 프레임까지 대기
+                }
+            }
+        }
+
+
+        // 현재 프리팹 삭제
+        Destroy(currentPrefab);
+        cdText.text = "";
+
+        StartCoroutine(clearStamp());
+    }
+
+
+
+
     // 버튼 기능 함수
     // 로직을 간단하게 수정함
 
@@ -254,7 +315,7 @@ public class DirectorScript : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-            if (sickChecker == currentPrefab.GetComponent<PrefabBehavior>().isSick) // sickChecker와 isSick이 같을 때, 즉 맞췄을 때
+        if (sickChecker == currentPrefab.GetComponent<PrefabBehavior>().isSick) // sickChecker와 isSick이 같을 때, 즉 맞췄을 때
         {
             signCheck(true);
         }
@@ -272,9 +333,36 @@ public class DirectorScript : MonoBehaviour
 
     }
 
+
+    private IEnumerator clearStamp() // 약간 스탬프효과 내듯이... 큰 상태에서 작아지기
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        float elapsedTime = 0f;
+        float scaleDuration = 0.32f;
+        float scaleMutiplier = 3.5f;
+        Vector3 finalScale = new Vector3(1f, 1f, 1f);
+        
+        GameObject stamp = Instantiate(stampPrefab);
+        stamp.transform.localScale = finalScale * scaleMutiplier;
+
+        
+
+        while (elapsedTime < scaleDuration)
+        {
+            float scale = Mathf.Lerp(finalScale.x * scaleMutiplier, finalScale.x, elapsedTime / scaleDuration);
+            stamp.transform.localScale = new Vector3(scale, scale, 1);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        stamp.transform.localScale = finalScale;
+ 
+    }
+
     private void popHowTo()
     {
         howTo.SetActive(true);
+        p_button.interactable = false;
         Time.timeScale = 0;
     }
 
