@@ -99,5 +99,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isMove: 0
   showWord: 
-  testWord: []
+  testWord:
+  - "\uB028?"
+  - "1+1\uC740 \uADC0\uC694\uBBF8~ ><"
+  - "\uBCFC\uC774 \uBE75\uBE75\uD558\uB2C8\uAE4C \uADC0\uC5EC\uC6CC\uC9C4 \uAC83
+    \uAC19\uC544\uC694! \uB7ED\uD0A4\uB124\uC624\uC796\uC559??"
+  - "\uD5C9 \uBCFC\uC774 \uBD80\uC5C8\uC5B4\uC694... \uB2E4\uB4E4 \uC800\uBCF4\uACE0
+    \uADC0\uC5FD\uB2E4\uACE0 \uD574\uC8FC\uC138\uC694!"
+  - "\uC800 \uBCF4\uC870\uAC1C \uC774\uC058\uC8E0?"
+  - "\uC774\uAC78 \uC774\uB807\uAC8C \uD558\uBA74..........................................
+    \uADC0\uC5EC\uC6CC\uC694!"
   isSick: 0

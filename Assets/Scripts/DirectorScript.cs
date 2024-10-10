@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.UI;
 
 
@@ -10,10 +11,14 @@ public class DirectorScript : MonoBehaviour
     public GameObject[] prefabs; // 캐릭터 프리팹 배열
     public GameObject[] signs; // 맞고 틀림을 판단하는 프리팹 배열
     public GameObject stampPrefab; // 클리어 했을 때 나타낼 이미지
+    
+
     private GameObject currentPrefab; // 현재 생성된 캐릭터 프리팹
 
     HeartManager heart; // 목숨이 깎이는 함수를 쓰기 위해서
     AudioSource mainBGM; // 배경음악
+
+    
 
 
     // 상호작용 버튼. 아픈지 아닌지 판단하기 위한 버튼들이 들어간다
@@ -24,12 +29,14 @@ public class DirectorScript : MonoBehaviour
     GameObject s_bubble; // 말풍선
     GameObject p_panel; // 일시정지 화면
     GameObject r_panel;
+    GameObject result_paper;
 
 
     Button p_button; // 일시정지 겸 메뉴 버튼
 
     Transform Buttons; // 게임 메인 버튼들(아픈지 아닌지 상호작용) 의 부모를 불러와서 캐릭터 프리팹과 함께 Destroy 하기 위해
 
+    GameObject disolveP;
 
     Text cdText; // 문구를 나타내기 위함
     Text scText; // 점수판
@@ -47,13 +54,16 @@ public class DirectorScript : MonoBehaviour
 
 
     int score = 0; // 점수
-    int c_point = 2; // 클리어 기준 점수
+    int c_point = 1; // 클리어 기준 점수
     
     
 
     // Start is called before the first frame update
     void Start()
     {
+        disolveP = GameObject.Find("disolveP");
+
+
         heart = GameObject.Find("heartBox").GetComponent<HeartManager>();
 
         Buttons = GameObject.Find("Buttons").GetComponent<Transform>();
@@ -68,6 +78,10 @@ public class DirectorScript : MonoBehaviour
 
         r_panel = GameObject.Find("resultPanel");
 
+        result_paper = GameObject.Find("neo_result");
+
+        result_paper.SetActive(false);
+
 
         mainBGM = GetComponent<AudioSource>();
 
@@ -75,7 +89,10 @@ public class DirectorScript : MonoBehaviour
         s_bubble.SetActive(false); // 처음엔 말풍선 Deactive
 
         r_panel.SetActive(false);
-        popHowTo();    // 처음에 게임 개요를 띄워준다
+
+        StartCoroutine(panel_Disolve());
+
+        //popHowTo();    // 처음에 게임 개요를 띄워준다
         
         StartCoroutine(RemoveAndSpawnPrefab()); 
         // 처음에 코루틴을 시작. RemoveAndSpawnPrefab()은 생성된 프리팹을 삭제 후 재생성 해주는 코루틴 이지만, 현재 생성된 프리팹이 없다면 삭제를 건너뛰고 생성만을 담당.
@@ -88,7 +105,7 @@ public class DirectorScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        scText.text = "현재 점수 : " + this.score; // 항상 점수 화면이 상단에 뜨도록 Update문에 적용함
+        scText.text = this.score + " / " + this.c_point; // 항상 점수 화면이 상단에 뜨도록 Update문에 적용함
         
         if(!this.stopCo)
         {
@@ -216,12 +233,14 @@ public class DirectorScript : MonoBehaviour
         if (isSign)
         {
             GameObject right = Instantiate(signs[0]);
+            right.GetComponent<AudioSource>().volume = mainBGM.volume; // 음악과 같이 볼륨이 조정되도록 설정
             Destroy(right, 1f);
             this.score++;
         }
         else if (!isSign)
         {
             GameObject wrong = Instantiate(signs[1]);
+            wrong.GetComponent<AudioSource>().volume = mainBGM.volume;
             Destroy(wrong, 1f);
             heart.LoseLife();
         }
@@ -311,21 +330,55 @@ public class DirectorScript : MonoBehaviour
  
     }
 
+
+    private IEnumerator panel_Disolve()
+    {
+        p_button.interactable = false; // 일시정지 버튼이 눌리지 않도록
+
+        Color color = disolveP.GetComponent<Image>().color;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < 1.5f)
+        {
+            // 서서히 투명해짐
+            color.a = Mathf.Lerp(1, 0, elapsedTime / 1.5f);
+            disolveP.GetComponent<Image>().color = color;
+
+            elapsedTime += Time.deltaTime;
+            yield return null; // 다음 프레임까지 대기
+        }
+
+        disolveP.SetActive(false);
+
+        popHowTo();
+
+    }
+
+
+
     private void popHowTo() // 게임개요 화면 띄우는 함수
     {
         howTo.SetActive(true); // 패널을 Active
-        p_button.interactable = false; // 일시정지 버튼이 눌리지 않도록
+        
         Time.timeScale = 0; // 게임 시간을 멈춰둔다.
     }
 
 
     private void popResult()
     {
+
         Debug.Log("결과창이 나올겁니다!");
         r_panel.SetActive(true);
+        result_paper.SetActive(true);
+
+        StartCoroutine(heart.niceScore());
+        
         Text r_text = GameObject.Find("resultTime").GetComponent<Text>();
         r_text.text = "걸린 시간 : " + this.totalTime.ToString("F2") + "s";
     }
+
+
+    
 
 }
 

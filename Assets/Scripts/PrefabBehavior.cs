@@ -10,19 +10,8 @@ public class PrefabBehavior : MonoBehaviour
 
     public string showWord; // 말풍선에 띄워줄 문구
 
-    public string[] testWord;
+    public string[] testWord; // 캐릭터 문구 배열
 
-
-    // 아픈 문구 랜덤으로 하기 위한 배열
-    private string[] sickWord = 
-        {"이가 썩은 것 같아요....", "이가 아파요. 진료 받고 싶어요", "엉엉... 이가 아프니까 자꾸 눈물이 나요", "아야야... 이가 너무 찌릿찌릿해요.", "이가 빠졌어요! 얼른 봐주세요!"};
-    
-
-    // 멀쩡한 문구 랜덤으로 하기 위한 배열
-    private string[] normalWord = 
-        { "볼이 빵빵하니까 귀여워진 것 같아요! 럭키네오잖앙??", "헉, 볼이 부어올랐어요... 다들 저한테 귀여운 말 해줘요!", "...", "아야... 배가 아파요. 화장실이 어디죠?", "입이 쩍 벌어지네 이젠 분위기가 아닌 나의 입 안을 파악~♪"};
-
-   
     public bool isSick; // 아픈지 아닌지 판단하기 위한 플래그
 
     float speed = 2.5f; // 캐릭터가 삭제될 때 이동 속도
@@ -36,23 +25,23 @@ public class PrefabBehavior : MonoBehaviour
 
         // 태그 별로 나눠서, 아픈지 아프지 않은지를 isSick 으로 나누기
         // 
-            
+
+        this.showWord = testWord[Random.Range(0, testWord.Length)];
 
         if(gameObject.CompareTag("sick")) // 아픔 태그가 달려 있다면
         {
             this.isSick = true; // 아픔은 참
-            this.showWord = sickWord[Random.Range(0, sickWord.Length)]; // 아픈 멘트를 랜덤으로 부여하기. 일단은 
+            
+            
         }
         else if(gameObject.CompareTag("good")) // 멀쩡함 태그가 달려 있다면
         {
             this.isSick = false; // 아픔은 거짓
-            this.showWord = normalWord[Random.Range(0, normalWord.Length)]; // 아프지 않은 문구 랜덤 부여
+            
+            
         }
 
-        Debug.Log(testWord);
-        Debug.Log(gameObject.name);
-
-        
+  
 
     }
 

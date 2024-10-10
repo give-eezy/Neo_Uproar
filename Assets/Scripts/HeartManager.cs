@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 public class HeartManager : MonoBehaviour
 {
     public Image[] heartImages;
+    public GameObject[] niceStamp;
     private int maxLives = 3; // 최대 목숨
     private int currentLives;
 
@@ -19,10 +20,16 @@ public class HeartManager : MonoBehaviour
 
     GameObject director;
 
+    Transform stampBox;
+
 
     AudioSource mainBGM;
 
-    
+
+    private void Awake()
+    {
+        stampBox = GameObject.Find("resultPanel").GetComponent<Transform>();
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -32,6 +39,8 @@ public class HeartManager : MonoBehaviour
         popUp = GameObject.Find("popUp");
         overPanel = GameObject.Find("overPanel");
         overText = GameObject.Find("overText");
+
+       
 
         mainBGM = director.GetComponent<AudioSource>();
 
@@ -85,7 +94,8 @@ public class HeartManager : MonoBehaviour
     {
 
         director.GetComponent<DirectorScript>().stopCo = true;
-        mainBGM.Stop();
+
+        StartCoroutine(overBGM());
 
         popUp.SetActive(true);
 
@@ -144,6 +154,41 @@ public class HeartManager : MonoBehaviour
         yield return new WaitForSeconds(2f);
 
         SceneManager.LoadScene("overScene");
+    }
+
+    private IEnumerator overBGM()
+    {
+        float startVolume = mainBGM.volume; // 현재 볼륨 저장
+        float duration = 2f;
+
+        for (float t = 0; t < duration; t += Time.deltaTime)
+        {
+            // 서서히 볼륨 조정
+            mainBGM.volume = Mathf.Lerp(startVolume, 0, t / duration);
+            yield return null; // 다음 프레임까지 대기
+        }
+
+        mainBGM.volume = 0; // 마지막 볼륨 설정
+    }
+
+    public IEnumerator niceScore()
+    {
+
+        yield return new WaitForSeconds(2f);
+
+        int lives = this.currentLives;
+
+        for (int i = 0; i < lives; i++)
+        {
+            // 별점 프리팹 생성
+            GameObject star = Instantiate(niceStamp[i], stampBox);
+            // 별점의 위치 조정 (예: 수평 배치)
+            
+
+            // 0.3초 대기
+            yield return new WaitForSeconds(0.3f);
+        }
+
     }
 
 }
