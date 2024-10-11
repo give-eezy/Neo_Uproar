@@ -159,7 +159,7 @@ public class HeartManager : MonoBehaviour
     private IEnumerator overBGM()
     {
         float startVolume = mainBGM.volume; // 현재 볼륨 저장
-        float duration = 2f;
+        float duration = 3.5f;
 
         for (float t = 0; t < duration; t += Time.deltaTime)
         {
@@ -174,7 +174,7 @@ public class HeartManager : MonoBehaviour
     public IEnumerator niceScore()
     {
 
-        yield return new WaitForSeconds(2f);
+        
 
         int lives = this.currentLives;
 
@@ -188,6 +188,8 @@ public class HeartManager : MonoBehaviour
             // 0.3초 대기
             yield return new WaitForSeconds(0.3f);
         }
+
+        yield return null;
 
     }
 

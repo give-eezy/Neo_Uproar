@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -18,8 +19,9 @@ public class DirectorScript : MonoBehaviour
     HeartManager heart; // 목숨이 깎이는 함수를 쓰기 위해서
     AudioSource mainBGM; // 배경음악
 
-    
 
+    public GameObject result_Rb;
+    public GameObject result_Qb;
 
     // 상호작용 버튼. 아픈지 아닌지 판단하기 위한 버튼들이 들어간다
     public GameObject LButton; 
@@ -35,6 +37,7 @@ public class DirectorScript : MonoBehaviour
     Button p_button; // 일시정지 겸 메뉴 버튼
 
     Transform Buttons; // 게임 메인 버튼들(아픈지 아닌지 상호작용) 의 부모를 불러와서 캐릭터 프리팹과 함께 Destroy 하기 위해
+    Transform resultBs;
 
     GameObject disolveP;
 
@@ -49,12 +52,13 @@ public class DirectorScript : MonoBehaviour
     float inDuration = 0.5f; // 페이드인 시간
     float typingSpeed = 0.05f; // 타이핑 효과의 시간
     float totalTime = 0f;
+    int guestCnt = 0;
 
     public bool stopCo = false; // 조건을 만족했을 때 프리팹의 삭제 기능은 작동하되, 생성 기능은 작동하지 않도록 막아주기 위해 플래그를 설정해준다
 
 
     int score = 0; // 점수
-    int c_point = 1; // 클리어 기준 점수
+    int c_point = 20; // 클리어 기준 점수
     
     
 
@@ -67,6 +71,7 @@ public class DirectorScript : MonoBehaviour
         heart = GameObject.Find("heartBox").GetComponent<HeartManager>();
 
         Buttons = GameObject.Find("Buttons").GetComponent<Transform>();
+        resultBs = GameObject.Find("resultBs").GetComponent<Transform>();
 
         cdText = GameObject.Find("cdText").GetComponent<Text>();
         scText = GameObject.Find("Scoreboard").GetComponent<Text>();
@@ -178,9 +183,9 @@ public class DirectorScript : MonoBehaviour
             yield return new WaitForSeconds(0.8f);
 
             // 랜덤 인덱스 생성
-            int randomIndex = Random.Range(0, prefabs.Length); // public으로 설정한 프리팹 배열에서 랜덤한 인덱스를 지정
+            int randomIndex = UnityEngine.Random.Range(0, prefabs.Length); // public으로 설정한 프리팹 배열에서 랜덤한 인덱스를 지정
             currentPrefab = Instantiate(prefabs[randomIndex]); // 랜덤한 프리팹을 생성
-                                                                   
+            this.guestCnt++;                                                       
 
 
             // 프리팹이 생성될 때 페이드인 하면서 만들어지도록
@@ -326,7 +331,7 @@ public class DirectorScript : MonoBehaviour
 
         yield return new WaitForSeconds(1.5f);
 
-        popResult();
+        StartCoroutine(popResult());
  
     }
 
@@ -364,17 +369,37 @@ public class DirectorScript : MonoBehaviour
     }
 
 
-    private void popResult()
+    private IEnumerator popResult()
     {
 
         Debug.Log("결과창이 나올겁니다!");
         r_panel.SetActive(true);
         result_paper.SetActive(true);
 
-        StartCoroutine(heart.niceScore());
+        DateTime today = DateTime.Today;
+
+        yield return new WaitForSeconds(0.8f);
         
         Text r_text = GameObject.Find("resultTime").GetComponent<Text>();
-        r_text.text = "걸린 시간 : " + this.totalTime.ToString("F2") + "s";
+        r_text.text = this.totalTime.ToString("F1") + "s";
+
+        yield return new WaitForSeconds(0.8f);
+
+        Text g_text = GameObject.Find("resultGuest").GetComponent<Text>();
+        g_text.text = "총 " + this.guestCnt + " 명";
+
+        yield return new WaitForSeconds(0.8f);
+        Text d_text = GameObject.Find("resultDay").GetComponent<Text>();
+        d_text.text = today.ToString("yy.MM.dd");
+
+        yield return new WaitForSeconds(1.2f);
+
+        StartCoroutine(heart.niceScore());
+
+        yield return new WaitForSeconds(1.5f);
+
+        GameObject reB = Instantiate(result_Rb, resultBs);
+        GameObject qB = Instantiate(result_Qb, resultBs);
     }
 
 
