@@ -73,6 +73,7 @@ public class ButtonScript : MonoBehaviour
 
     public void restart()
     {
+        Time.timeScale = 1f;
         SceneManager.LoadScene("GameScene");
     }
 
