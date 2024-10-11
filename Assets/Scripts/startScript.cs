@@ -45,7 +45,13 @@ public class startScript : MonoBehaviour
             StopCoroutine(startCo);
             StartCoroutine(gameStart());
         }
-        
+
+        if (Input.GetKeyDown(KeyCode.Return) && Input.GetKey(KeyCode.LeftAlt))
+        {
+            // Alt + Enter 조합을 눌렀을 때 아무것도 하지 않음
+            Debug.Log("Alt + Enter 입력 무시");
+        }
+
     }
 
     private IEnumerator gameStart()
