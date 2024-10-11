@@ -15,7 +15,7 @@ public class ButtonScript : MonoBehaviour
 
     AudioSource mainBGM;
 
-    AudioMixer pMix;
+    
 
 
     private void Awake()
@@ -32,7 +32,7 @@ public class ButtonScript : MonoBehaviour
         Director = GameObject.Find("GameDirector").GetComponent<DirectorScript>();
         mainBGM = Director.GetComponent<AudioSource>();
         p_button = GameObject.Find("pauseButton").GetComponent<Button>();
-        pMix = mainBGM.outputAudioMixerGroup.audioMixer;
+        
 
     }
 
@@ -83,7 +83,7 @@ public class ButtonScript : MonoBehaviour
 
     public void pauseFunc()
     {
-        pMix.SetFloat("pVolume", -15f);
+       
         Time.timeScale = 0;
         Debug.Log(p_panel);
         p_panel.SetActive(true);
@@ -91,7 +91,7 @@ public class ButtonScript : MonoBehaviour
 
     public void resumeFunc()
     {
-        pMix.SetFloat("pVolume", 0);
+        
         Time.timeScale = 1;
         p_panel.SetActive(false);
     }
