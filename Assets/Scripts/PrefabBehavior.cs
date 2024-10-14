@@ -26,6 +26,8 @@ public class PrefabBehavior : MonoBehaviour
         // 태그 별로 나눠서, 아픈지 아프지 않은지를 isSick 으로 나누기
         // 
 
+        Shuffle(testWord);
+
         this.showWord = testWord[Random.Range(0, testWord.Length)];
 
         if(gameObject.CompareTag("sick")) // 아픔 태그가 달려 있다면
@@ -69,6 +71,22 @@ public class PrefabBehavior : MonoBehaviour
 
         transform.Translate(-speed * Time.deltaTime, 0, 0); // 좌측으로 움직이도록 설정
 
+    }
+
+    public void Shuffle<T>(T[] array)
+    {
+        int n = array.Length;
+
+        for (int i = n - 1; i > 0; i--)
+        {
+            // 0부터 i까지의 랜덤 인덱스 생성
+            int j = Random.Range(0, i + 1);
+
+            // 배열 요소 교환
+            T temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        }
     }
 
 }

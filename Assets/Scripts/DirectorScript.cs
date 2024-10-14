@@ -183,6 +183,8 @@ public class DirectorScript : MonoBehaviour
         Destroy(currentPrefab);
         cdText.text = "";
 
+        Shuffle(prefabs);
+
 
         if (!this.stopCo) // 조건을 만족했을 경우, 코루틴 작동하되 프리팹 생성은 되지 않도록
         {
@@ -409,7 +411,21 @@ public class DirectorScript : MonoBehaviour
     }
 
 
-    
+    public void Shuffle<T>(T[] array)
+    {
+        int n = array.Length;
+
+        for (int i = n - 1; i > 0; i--)
+        {
+            // 0부터 i까지의 랜덤 인덱스 생성
+            int j = UnityEngine.Random.Range(0, i + 1);
+
+            // 배열 요소 교환
+            T temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        }
+    }
 
 }
 
