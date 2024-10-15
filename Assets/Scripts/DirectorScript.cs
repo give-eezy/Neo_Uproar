@@ -377,35 +377,37 @@ public class DirectorScript : MonoBehaviour
     }
 
 
-    private IEnumerator popResult()
+    private IEnumerator popResult() // 결과창을 나타내는 코루틴. 중간에 대기시간 등을 주기 위해 코루틴을 사용했다.
     {
 
         Debug.Log("결과창이 나올겁니다!");
-        r_panel.SetActive(true);
-        result_paper.SetActive(true);
+        r_panel.SetActive(true); // 결과창 패널 활성화
+        result_paper.SetActive(true); // 결과창 패널의 뒷배경 이미지 활성화
 
-        DateTime today = DateTime.Today;
+        DateTime today = DateTime.Today; // 오늘의 날짜를 불러옴
 
         yield return new WaitForSeconds(0.8f);
         
-        Text r_text = GameObject.Find("resultTime").GetComponent<Text>();
+        Text r_text = GameObject.Find("resultTime").GetComponent<Text>(); // 총 걸린 시간을 나타내기 위해 텍스트 컴포넌트 불러옴
         r_text.text = this.totalTime.ToString("F1") + "s";
 
         yield return new WaitForSeconds(0.8f);
 
-        Text g_text = GameObject.Find("resultGuest").GetComponent<Text>();
+        Text g_text = GameObject.Find("resultGuest").GetComponent<Text>(); // 총 방문 인원 수를 나타내기 위해 텍스트 컴포넌트 불러옴
         g_text.text = "총 " + this.guestCnt + " 명";
 
         yield return new WaitForSeconds(0.8f);
-        Text d_text = GameObject.Find("resultDay").GetComponent<Text>();
+        Text d_text = GameObject.Find("resultDay").GetComponent<Text>(); // 오늘의 날짜를 입력하기 위한 텍스트 컴포넌트 불러옴
         d_text.text = today.ToString("yy.MM.dd");
 
         yield return new WaitForSeconds(1.2f);
 
-        StartCoroutine(heart.niceScore());
+        StartCoroutine(heart.niceScore()); // 참 잘했어요 도장을 나타내기 위한 코루틴 시작
 
         yield return new WaitForSeconds(1.5f);
 
+        // 다시하기 버튼과 게임종료 버튼을 나타내준다
+        
         GameObject reB = Instantiate(result_Rb, resultBs);
         GameObject qB = Instantiate(result_Qb, resultBs);
     }

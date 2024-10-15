@@ -171,20 +171,18 @@ public class HeartManager : MonoBehaviour
         mainBGM.volume = 0; // 마지막 볼륨 설정
     }
 
-    public IEnumerator niceScore()
+    public IEnumerator niceScore() // 참 잘했어요 도장을 화면에 나타내주는 코루틴
     {
 
         
 
-        int lives = this.currentLives;
+        int lives = this.currentLives; // 현재 남은 목숨의 갯수를 lives 라는 지역변수에 저장
 
-        for (int i = 0; i < lives; i++)
+        for (int i = 0; i < lives; i++) // 남은 목숨의 갯수만큼 반복
         {
             // 별점 프리팹 생성
-            GameObject star = Instantiate(niceStamp[i], stampBox);
-            // 별점의 위치 조정 (예: 수평 배치)
+            GameObject star = Instantiate(niceStamp[i], stampBox); // niceStamp를 stampBox의 자식 오브젝트로 생성. 위치는 이미 프리팹마다 지정되어 있다.
             
-
             // 0.3초 대기
             yield return new WaitForSeconds(0.3f);
         }

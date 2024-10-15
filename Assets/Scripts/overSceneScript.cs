@@ -18,9 +18,9 @@ public class overSceneScript : MonoBehaviour
     void Start()
     {
         over = GameObject.Find("overControl").GetComponent<Transform>(); ;
-        targetPos = new Vector2(over.position.x, over.position.y + 150);
+        targetPos = new Vector2(over.position.x, over.position.y + 150); // 게임오버 문구의 최종 목표지점의 위치. y좌표로 150정도 올라가도록 했다.
 
-        foreach (var button in overButtons)
+        foreach (var button in overButtons) // 게임오버 문구가 올라가는 동안은 버튼 비활성화
         {
             button.SetActive(false);
         }
@@ -35,7 +35,7 @@ public class overSceneScript : MonoBehaviour
     }
 
 
-    private IEnumerator MoveToTarget(Vector2 target, float duration)
+    private IEnumerator MoveToTarget(Vector2 target, float duration) // 게임오버 문구가 위로 움직이도록 하는 코루틴
     {
         Vector2 startPosition = over.position; // 시작 위치
         float elapsedTime = 0f;
@@ -56,7 +56,7 @@ public class overSceneScript : MonoBehaviour
 
         yield return new WaitForSeconds(0.5f);
 
-        foreach (var button in overButtons)
+        foreach (var button in overButtons) // 게임오버 문구가 목표 위치로 이동했으니, 다시 버튼을 활성화 시켜줌
         {
             button.SetActive(true);
         }

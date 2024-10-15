@@ -38,7 +38,7 @@ public class startScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.anyKeyDown && !isClicked)
+        if (Input.anyKeyDown && !isClicked) // 게임 시작 화면에서 아무 키나 눌러도 넘어가도록 만들기 위해서
         {
             Debug.Log("키가 입력되었습니다!");
 
@@ -46,7 +46,7 @@ public class startScript : MonoBehaviour
             StartCoroutine(gameStart());
         }
 
-        if (Input.GetKeyDown(KeyCode.Return) && Input.GetKey(KeyCode.LeftAlt))
+        if (Input.GetKeyDown(KeyCode.Return) && Input.GetKey(KeyCode.LeftAlt)) // 게임 화면이 특정 해상도만 대응하기 때문에, 전체화면이 되는 것을 막기 위한 코드
         {
             // Alt + Enter 조합을 눌렀을 때 아무것도 하지 않음
             Debug.Log("Alt + Enter 입력 무시");
@@ -88,7 +88,7 @@ public class startScript : MonoBehaviour
         SceneManager.LoadScene("GameScene");
     }
 
-    private IEnumerator n_BlinkCo()
+    private IEnumerator n_BlinkCo() // 버튼을 누르기 전 글씨가 깜빡이는 기능. 천천히 반복된다.
     {
         this.isClicked = false;
         startText.text = "-Press Any Key-";

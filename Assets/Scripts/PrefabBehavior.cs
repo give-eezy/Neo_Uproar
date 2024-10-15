@@ -26,9 +26,9 @@ public class PrefabBehavior : MonoBehaviour
         // 태그 별로 나눠서, 아픈지 아프지 않은지를 isSick 으로 나누기
         // 
 
-        Shuffle(testWord);
+        Shuffle(testWord); // 캐릭터가 생성될 때, 가지고 있는 문구 배열을 한번 섞어준다
 
-        this.showWord = testWord[Random.Range(0, testWord.Length)];
+        this.showWord = testWord[Random.Range(0, testWord.Length)]; // 가지고 있는 문구 배열에서 무작위 인덱스를 추출, 그 인덱스에 해당하는 문구를 showWord라는 출력 문구 변수에 넣어준다.
 
         if(gameObject.CompareTag("sick")) // 아픔 태그가 달려 있다면
         {
@@ -73,11 +73,11 @@ public class PrefabBehavior : MonoBehaviour
 
     }
 
-    public void Shuffle<T>(T[] array)
+    public void Shuffle<T>(T[] array) // 배열의 요소를 무작위로 섞어주는 함수. <T> 의 경우는 어느 자료형으로 이루어진 배열이든 받을 수 있게 해준다
     {
-        int n = array.Length;
+        int n = array.Length; // 배열의 길이를 n이라는 지역변수로 저장
 
-        for (int i = n - 1; i > 0; i--)
+        for (int i = n - 1; i > 0; i--) // 배열의 끝 순서부터 역으로 
         {
             // 0부터 i까지의 랜덤 인덱스 생성
             int j = Random.Range(0, i + 1);
